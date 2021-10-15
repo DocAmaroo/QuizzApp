@@ -6,15 +6,7 @@ class QuestionModel {
   QuestionModel(
       {required this.question, required this.answer, required this.imageURL});
 
-  String getQuestion() {
-    return question;
-  }
-
-  bool getAnswer() {
-    return answer;
-  }
-
-  String getImageURL() {
-    return imageURL;
-  }
+  String get getQuestion => question;
+  bool get getAnswer => answer;
+  String get getImageURL => imageURL;
 }

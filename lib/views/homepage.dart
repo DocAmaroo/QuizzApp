@@ -1,163 +1,65 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:quizz/data/viewmodels/game_vm.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quizz/bloc/quizz_bloc.dart';
+import 'package:quizz/data/models/question.dart';
 import 'package:quizz/views/result.dart';
+import 'package:quizz/widgets/quizz_actions.dart';
+import 'package:quizz/widgets/quizz_body.dart';
+import 'package:quizz/widgets/quizz_header.dart';
 
-import 'custom_app_bar.dart';
+import '../widgets/custom_app_bar.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
+
+  final String title;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late GameViewModel gameViewModel;
-
   @override
   Widget build(BuildContext context) {
-    // Get my provider
-    gameViewModel = Provider.of<GameViewModel>(context);
-
     return Scaffold(
-        appBar: const MyAppBar(title: Text("Beatbox Quizz")),
-        body: Container(
-            padding: const EdgeInsets.symmetric(vertical: 50),
-            child: Column(children: <Widget>[
-              _getGameState(),
-              const SizedBox(height: 32),
-              _getQuestion(),
-              const SizedBox(height: 32),
-              _getImage(),
-              const Spacer(),
-              _getButtons()
-            ])));
+        appBar: MyAppBar(title: widget.title),
+        body: Center(
+            child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(children: <Widget>[
+                  BlocBuilder<QuizzBloc, QuizzState>(
+                      builder: (context, state) => _blocBuilder(context, state))
+                ]))));
   }
 
-  Container _getGameState() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 32),
-      child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: <Widget>[
-        Text(
-            '${gameViewModel.currentQuestionIndex + 1}/${gameViewModel.questions.length}',
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
-        const SizedBox(width: 12),
-        const Text('Question',
-            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400)),
-        const Spacer(),
-        Text('${gameViewModel.points}',
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
-        const SizedBox(width: 12),
-        const Text('Points',
-            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400)),
-      ]),
-    );
-  }
-
-  Container _getQuestion() {
-    return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 32),
-        child: Text(gameViewModel.question.question,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18)));
-  }
-
-  Container _getImage() {
-    return Container(
-        width: MediaQuery.of(context).size.width / 1.2,
-        height: MediaQuery.of(context).size.height / 2,
-        decoration: BoxDecoration(
-            shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.circular(16),
-            image: DecorationImage(
-                image: NetworkImage(gameViewModel.question.getImageURL()),
-                fit: BoxFit.cover)));
-  }
-
-  Container _getButtons() {
-    bool answer = gameViewModel.question.getAnswer();
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
-      child: Row(children: <Widget>[
-        // True buttons
-        Expanded(
-            child: GestureDetector(
-                onTap: () {
-                  handleState(answer == true);
-                },
-                child: Container(
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    child: const Text('True',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 17,
-                            fontWeight: FontWeight.w500)),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(24),
-                        gradient: const LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: <Color>[
-                              Colors.green,
-                              Colors.lightGreen
-                            ]))))),
-        const SizedBox(width: 20),
-        // False button
-        Expanded(
-            child: GestureDetector(
-                onTap: () {
-                  handleState(answer == false);
-                },
-                child: Container(
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    child: const Text('False',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 17,
-                            fontWeight: FontWeight.w500)),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(24),
-                        gradient: const LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: <Color>[
-                              Colors.pink,
-                              Colors.deepOrangeAccent
-                            ]))))),
-      ]),
-    );
-  }
-
-  void handleState(bool isCorrect) {
-    // If correct answer add 20 points, else remove 5 points
-    if (isCorrect) {
-      gameViewModel.points += 20;
-      gameViewModel.correct++;
-      ScaffoldMessenger.of(context).showSnackBar(getSnackBar(true));
+  Widget _blocBuilder(BuildContext context, QuizzState state) {
+    if (state is LoadingQuizzState) {
+      return const Center(
+          child: CircularProgressIndicator(color: Colors.black));
+    } else if (state is LoadedQuizzState) {
+      return _loadedContent(context, state);
+    } else if (state is FailedToLoadQuizzState) {
+      return Text('Error occured: ${state.error.message}');
+    } else if (state is LoadResultState) {
+      return const QuizzResult();
     } else {
-      gameViewModel.points -= 5;
-      gameViewModel.incorrect++;
-      ScaffoldMessenger.of(context).showSnackBar(getSnackBar(false));
+      return const Center(
+        child: Text('No statement, try to reload the app',
+            style: TextStyle(
+                fontWeight: FontWeight.w400, fontStyle: FontStyle.italic)),
+      );
     }
+  }
 
-    // if no more question then go to result page, else get next question
-    if (gameViewModel.currentQuestionIndex <
-        gameViewModel.questions.length - 1) {
-      gameViewModel.currentQuestionIndex++;
-    } else {
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => Result(
-                  score: gameViewModel.points,
-                  totalQuestion: gameViewModel.questions.length,
-                  correct: gameViewModel.correct,
-                  incorrect: gameViewModel.incorrect)));
-    }
+  Wrap _loadedContent(BuildContext context, QuizzState state) {
+    final QuestionModel question =
+        context.select((QuizzBloc bloc) => bloc.currentQuestion);
+
+    return Wrap(runSpacing: 20, children: [
+      const QuizzHeader(),
+      QuizzBody(questionModel: question),
+      const QuizzActions()
+    ]);
   }
 
   // Custom SnackBar

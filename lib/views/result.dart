@@ -1,81 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:quizz/data/viewmodels/game_vm.dart';
-import 'package:quizz/views/homepage.dart';
+import 'package:provider/src/provider.dart';
+import 'package:quizz/bloc/quizz_bloc.dart';
 
-class Result extends StatefulWidget {
-  final int score, totalQuestion, correct, incorrect;
+class QuizzResult extends StatelessWidget {
+  const QuizzResult({Key? key}) : super(key: key);
 
-  const Result(
-      {Key? key,
-      required this.score,
-      required this.totalQuestion,
-      required this.correct,
-      required this.incorrect})
-      : super(key: key);
-
-  @override
-  State<Result> createState() => _ResultState();
-}
-
-class _ResultState extends State<Result> {
   @override
   Widget build(BuildContext context) {
-    GameViewModel gameViewModel = Provider.of<GameViewModel>(context);
+    final int questionsLength =
+        context.select((QuizzBloc bloc) => bloc.questionsLength);
+    final int score = context.select((QuizzBloc bloc) => bloc.nbPoints);
+    final int correct = context.select((QuizzBloc bloc) => bloc.getNbCorrect);
+    final int incorrect =
+        context.select((QuizzBloc bloc) => bloc.getNbIncorrect);
 
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('Results'),
-          centerTitle: true,
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: <Color>[Colors.deepPurple, Colors.indigo])),
-          ),
-        ),
-        body: Center(
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                // Main score
-                Text(
-                    'Votre score est de ${widget.score} / ${widget.totalQuestion * 20}',
-                    style: const TextStyle(fontSize: 18)),
-                const SizedBox(height: 16),
-                // Correct and incorrect counter
-                Text(
-                    '${widget.correct} correcte | ${widget.incorrect} incorrecte',
-                    style: const TextStyle(fontSize: 16)),
-                const SizedBox(height: 32),
-                // Restart button
-                GestureDetector(
-                    onTap: () {
-                      gameViewModel.reset();
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const MyHomePage()));
-                    },
-                    child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 16, horizontal: 64),
-                        child: const Text("Replay Quizz",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 16)),
-                        decoration: BoxDecoration(
-                            shape: BoxShape.rectangle,
-                            borderRadius: BorderRadius.circular(16),
-                            gradient: const LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: <Color>[
-                                  Colors.deepPurple,
-                                  Colors.indigo
-                                ])))),
-              ]),
-        ));
+    return Center(
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+          // Main score
+          Text('Votre score est de $score / ${questionsLength * 20}',
+              style: const TextStyle(fontSize: 18)),
+          const SizedBox(height: 16),
+          // Correct and incorrect counter
+          Text('$correct correcte | $incorrect incorrecte',
+              style: const TextStyle(fontSize: 16)),
+          const SizedBox(height: 32),
+          // Restart button
+          GestureDetector(
+              onTap: () {
+                context.read<QuizzBloc>().add(QuizzRestart());
+              },
+              child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 16, horizontal: 64),
+                  child: const Text("Replay Quizz",
+                      style: TextStyle(color: Colors.white, fontSize: 16)),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(16),
+                      gradient: const LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: <Color>[Colors.deepPurple, Colors.indigo])))),
+        ]));
   }
 }

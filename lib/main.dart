@@ -1,27 +1,18 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:quizz/data/question_data.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'data/viewmodels/game_vm.dart';
-import 'views/homepage.dart';
+import 'app.dart';
+import 'bloc/simple_bloc_observer.dart';
 
-void main() {
-  runApp(ChangeNotifierProvider(
-    create: (_) => GameViewModel(questions: questions),
-    child: const MyApp(),
-  ));
-}
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  // Firebase
+  await Firebase.initializeApp();
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Beatbox Quizz',
-        theme: ThemeData(
-          primarySwatch: Colors.deepPurple,
-        ),
-        home: const MyHomePage());
-  }
+  // Bloc observer for debugging purpose
+  Bloc.observer = SimpleBlocObserver();
+
+  runApp(const MyApp());
 }

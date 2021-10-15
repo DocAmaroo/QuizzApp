@@ -1,6 +1,6 @@
 import 'package:quizz/data/models/question.dart';
 
-final List<QuestionModel> questions = [
+final List<QuestionModel> questionsData = [
   QuestionModel(
       question: 'Has DLow won the Grand Beatbox Battle (GBB) in 2019',
       answer: true,

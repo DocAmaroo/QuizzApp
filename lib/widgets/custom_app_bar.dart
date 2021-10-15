@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
 
 class MyAppBar extends StatelessWidget with PreferredSizeWidget {
-  final Widget? title;
+  final String title;
   final List<Widget>? actions;
 
-  const MyAppBar({Key? key, this.title, this.actions}) : super(key: key);
+  const MyAppBar({Key? key, required this.title, this.actions})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: title ?? const Text("MyAppBar"),
+      title: Text(title),
       flexibleSpace: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
               gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: <Color>[Colors.deepPurple, Colors.indigo]))),
+                  colors: <Color>[
+            Colors.purple.shade400,
+            Colors.pink.shade400
+          ]))),
       actions: actions ?? [],
     );
   }
