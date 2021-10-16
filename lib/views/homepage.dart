@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quizz/bloc/quizz_bloc.dart';
 import 'package:quizz/data/models/question.dart';
+import 'package:quizz/views/add_question.dart';
 import 'package:quizz/views/result.dart';
 import 'package:quizz/widgets/quizz_actions.dart';
 import 'package:quizz/widgets/quizz_body.dart';
@@ -22,7 +23,16 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: MyAppBar(title: widget.title),
+        appBar: MyAppBar(title: widget.title, actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.add),
+            tooltip: 'Add new question',
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const AddQuestion()));
+            },
+          )
+        ]),
         body: Center(
             child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
