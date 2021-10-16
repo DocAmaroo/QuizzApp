@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:provider/src/provider.dart';
 import 'package:quizz/bloc/quizz_bloc.dart';
-import 'package:quizz/data/models/question.dart';
 
 class QuizzHeader extends StatelessWidget {
   const QuizzHeader({Key? key}) : super(key: key);

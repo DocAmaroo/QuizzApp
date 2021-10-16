@@ -9,8 +9,8 @@ class LoadingQuizzState extends QuizzState {}
 
 // Quizz information have been loaded
 class LoadedQuizzState extends QuizzState {
-  final QuestionModel question;
-  LoadedQuizzState({required this.question});
+  final QuestionModel currentQuestion;
+  LoadedQuizzState({required this.currentQuestion});
 }
 
 class LoadResultState extends QuizzState {}

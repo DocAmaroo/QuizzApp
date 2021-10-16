@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quizz/bloc/quizz_bloc.dart';
-import 'package:quizz/data/question_data.dart';
-import 'package:quizz/repositories/quizz_repository.dart';
 
 import 'views/homepage.dart';
 

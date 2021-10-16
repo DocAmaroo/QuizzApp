@@ -3,13 +3,13 @@ import 'package:meta/meta.dart';
 import 'package:quizz/data/models/question.dart';
 
 import 'package:quizz/errors/http_exception.dart' as http_exception;
-import 'package:quizz/repositories/quizz_repository.dart';
+import 'package:quizz/services/quizz_services.dart';
 
 part 'quizz_event.dart';
 part 'quizz_state.dart';
 
 class QuizzBloc extends Bloc<QuizzEvent, QuizzState> {
-  final quizzRepository = QuizzRepository();
+  final quizzServices = QuizzServices();
 
   late List<QuestionModel> questions;
   int nbPoints = 0;
@@ -32,7 +32,7 @@ class QuizzBloc extends Bloc<QuizzEvent, QuizzState> {
     on<QuizzRestart>(_onRestart);
   }
 
-  void _loadQuizz(LoadQuizz event, Emitter<QuizzState> emit) {
+  void _loadQuizz(LoadQuizz event, Emitter<QuizzState> emit) async {
     emit(LoadingQuizzState());
 
     nbPoints = 0;
@@ -40,10 +40,11 @@ class QuizzBloc extends Bloc<QuizzEvent, QuizzState> {
     incorrect = 0;
 
     try {
-      questions = quizzRepository.getQuestions();
+      questions = await quizzServices.getQuestions();
       if (questions.isNotEmpty) {
         currentQuestionIndex = 0;
-        emit(LoadedQuizzState(question: currentQuestion));
+        emit(
+            LoadedQuizzState(currentQuestion: questions[currentQuestionIndex]));
       } else {
         emit(LoadResultState());
       }
@@ -65,7 +66,7 @@ class QuizzBloc extends Bloc<QuizzEvent, QuizzState> {
       add(QuizzEnd());
     } else {
       currentQuestionIndex++;
-      emit(LoadedQuizzState(question: questions[currentQuestionIndex]));
+      emit(LoadedQuizzState(currentQuestion: questions[currentQuestionIndex]));
     }
   }
 
