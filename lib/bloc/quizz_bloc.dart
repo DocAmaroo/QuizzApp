@@ -1,25 +1,16 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:quizz/data/models/question.dart';
 
 import 'package:quizz/errors/http_exception.dart' as http_exception;
-import 'package:quizz/services/quizz_services.dart';
 
 part 'quizz_event.dart';
 part 'quizz_state.dart';
 
 class QuizzBloc extends Bloc<QuizzEvent, QuizzState> {
-  final quizzServices = QuizzServices();
-
-  late List<QuestionModel> questions;
   int nbPoints = 0;
   int correct = 0;
   int incorrect = 0;
-  int currentQuestionIndex = 0;
-
-  int get questionsLength => questions.length;
-
-  QuestionModel get currentQuestion => questions[currentQuestionIndex];
+  int currIndex = 0;
 
   int get getNbPoints => nbPoints;
   int get getNbCorrect => correct;
@@ -35,26 +26,16 @@ class QuizzBloc extends Bloc<QuizzEvent, QuizzState> {
   void _loadQuizz(LoadQuizz event, Emitter<QuizzState> emit) async {
     emit(LoadingQuizzState());
 
+    currIndex = 0;
     nbPoints = 0;
     correct = 0;
     incorrect = 0;
 
-    try {
-      questions = await quizzServices.getQuestions();
-      if (questions.isNotEmpty) {
-        currentQuestionIndex = 0;
-        emit(
-            LoadedQuizzState(currentQuestion: questions[currentQuestionIndex]));
-      } else {
-        emit(LoadResultState());
-      }
-    } on http_exception.HTTPException catch (e) {
-      emit(FailedToLoadQuizzState(error: e));
-    }
+    emit(LoadedQuizzState(currIndex: currIndex));
   }
 
   void _onNext(NextQuestion event, Emitter<QuizzState> emit) {
-    if (questions[currentQuestionIndex].answer == event.answer) {
+    if (event.isTrue) {
       correct++;
       nbPoints += 20;
     } else {
@@ -62,16 +43,16 @@ class QuizzBloc extends Bloc<QuizzEvent, QuizzState> {
       nbPoints -= 5;
     }
 
-    if (questions.length <= currentQuestionIndex + 1) {
-      add(QuizzEnd());
-    } else {
-      currentQuestionIndex++;
-      emit(LoadedQuizzState(currentQuestion: questions[currentQuestionIndex]));
-    }
+    currIndex++;
+    emit(LoadedQuizzState(currIndex: currIndex));
   }
 
   void _onEnd(QuizzEnd event, Emitter<QuizzState> emit) {
-    emit(LoadResultState());
+    emit(LoadResultState(
+        nbAnswer: currIndex,
+        nbCorrectAnswer: correct,
+        nbIncorrectAnswer: incorrect,
+        nbPoints: nbPoints));
   }
 
   void _onRestart(QuizzRestart event, Emitter<QuizzState> emit) {

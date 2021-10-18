@@ -62,7 +62,7 @@ class _AddQuestionState extends State<AddQuestion> {
               controller: _imageURLController,
               cursorColor: Colors.black45,
               decoration: const InputDecoration(
-                labelText: 'Image URL',
+                labelText: 'Image URL (Optionnal)',
                 floatingLabelStyle: TextStyle(color: Colors.deepOrange),
                 hintText: 'https://myimage.org',
                 enabledBorder: UnderlineInputBorder(

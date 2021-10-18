@@ -9,11 +9,22 @@ class LoadingQuizzState extends QuizzState {}
 
 // Quizz information have been loaded
 class LoadedQuizzState extends QuizzState {
-  final QuestionModel currentQuestion;
-  LoadedQuizzState({required this.currentQuestion});
+  final int currIndex;
+  LoadedQuizzState({required this.currIndex});
 }
 
-class LoadResultState extends QuizzState {}
+class LoadResultState extends QuizzState {
+  final int nbAnswer;
+  final int nbCorrectAnswer;
+  final int nbIncorrectAnswer;
+  final int nbPoints;
+
+  LoadResultState(
+      {required this.nbAnswer,
+      required this.nbCorrectAnswer,
+      required this.nbIncorrectAnswer,
+      required this.nbPoints});
+}
 
 // Failed to load Quizz information
 class FailedToLoadQuizzState extends QuizzState {

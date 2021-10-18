@@ -8,9 +8,9 @@ class LoadQuizz extends QuizzEvent {
 }
 
 class NextQuestion extends QuizzEvent {
-  final bool answer;
+  final bool isTrue;
 
-  NextQuestion({required this.answer});
+  NextQuestion({required this.isTrue});
 
   @override
   String toString() => '[EVENT] Next question';

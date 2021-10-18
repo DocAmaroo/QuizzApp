@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quizz/bloc/quizz_bloc.dart';
 import 'package:quizz/data/models/question.dart';
+import 'package:quizz/services/quizz_services.dart';
 import 'package:quizz/views/add_question.dart';
 import 'package:quizz/views/result.dart';
 import 'package:quizz/widgets/quizz_actions.dart';
@@ -20,6 +22,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final _quizzServices = QuizzServices();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,6 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ]))));
   }
 
+  // Handle Bloc State
   Widget _blocBuilder(BuildContext context, QuizzState state) {
     if (state is LoadingQuizzState) {
       return const Center(
@@ -51,7 +56,11 @@ class _MyHomePageState extends State<MyHomePage> {
     } else if (state is FailedToLoadQuizzState) {
       return Text('Error occured: ${state.error.message}');
     } else if (state is LoadResultState) {
-      return const QuizzResult();
+      return QuizzResult(
+          nbAnswer: state.nbAnswer,
+          nbCorrectAnswer: state.nbCorrectAnswer,
+          nbIncorrectAnswer: state.nbIncorrectAnswer,
+          nbPoints: state.nbPoints);
     } else {
       return const Center(
         child: Text('No statement, try to reload the app',
@@ -61,15 +70,38 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Wrap _loadedContent(BuildContext context, QuizzState state) {
-    final QuestionModel question =
-        context.select((QuizzBloc bloc) => bloc.currentQuestion);
+  // Load the content to display with firebase
+  FutureBuilder _loadedContent(BuildContext context, LoadedQuizzState state) {
+    return FutureBuilder<QuerySnapshot>(
+        future: _quizzServices.getQuestions(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return const Text('Unable to fetch data!');
+          }
 
-    return Wrap(runSpacing: 20, children: [
-      const QuizzHeader(),
-      QuizzBody(questionModel: question),
-      const QuizzActions()
-    ]);
+          if (snapshot.connectionState == ConnectionState.done) {
+            var data = snapshot.data!.docs;
+            List<QuestionModel> questions = data
+                .map((e) => QuestionModel.fromQueryDocumentSnapshot(e))
+                .toList();
+
+            if (state.currIndex < questions.length) {
+              QuestionModel currQuestion = questions[state.currIndex];
+
+              return Wrap(runSpacing: 20, children: [
+                QuizzHeader(
+                    nbQuestion: questions.length, currIndex: state.currIndex),
+                QuizzBody(questionModel: currQuestion),
+                QuizzActions(answer: currQuestion.getAnswer)
+              ]);
+            } else {
+              BlocProvider.of<QuizzBloc>(context).add(QuizzEnd());
+            }
+          }
+
+          return const Center(
+              child: CircularProgressIndicator(color: Colors.black));
+        });
   }
 
   // Custom SnackBar

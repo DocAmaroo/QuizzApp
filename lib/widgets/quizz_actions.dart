@@ -4,7 +4,9 @@ import 'package:provider/src/provider.dart';
 import 'package:quizz/bloc/quizz_bloc.dart';
 
 class QuizzActions extends StatelessWidget {
-  const QuizzActions({Key? key}) : super(key: key);
+  final bool answer;
+
+  const QuizzActions({Key? key, required this.answer}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +62,7 @@ class QuizzActions extends StatelessWidget {
                         ])))));
   }
 
-  void _answer(BuildContext context, bool answer) {
-    context.read<QuizzBloc>().add(NextQuestion(answer: answer));
+  void _answer(BuildContext context, bool userAnswer) {
+    context.read<QuizzBloc>().add(NextQuestion(isTrue: (answer == userAnswer)));
   }
 }
