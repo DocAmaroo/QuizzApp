@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/src/provider.dart';
 import 'package:quizz/bloc/quizz_bloc.dart';
+import 'package:quizz/utils/app_colors.dart';
 
 class QuizzActions extends StatelessWidget {
   final bool answer;
@@ -21,45 +23,28 @@ class QuizzActions extends StatelessWidget {
 
   Expanded _getTrueButton(BuildContext context) {
     return Expanded(
-        child: GestureDetector(
-            onTap: () => _answer(context, true),
-            child: Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                child: const Text('True',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 17,
-                        fontWeight: FontWeight.w500)),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(24),
-                    gradient: const LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: <Color>[Colors.green, Colors.lightGreen])))));
+        child: ElevatedButton(
+            onPressed: () => _answer(context, true),
+            style: ElevatedButton.styleFrom(
+                primary: AppColors.buttonGreen, onPrimary: AppColors.textLight),
+            child: const Text('Vrai',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ))));
   }
 
   Expanded _getFalseButton(BuildContext context) {
     return Expanded(
-        child: GestureDetector(
-            onTap: () => _answer(context, false),
-            child: Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                child: const Text('False',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 17,
-                        fontWeight: FontWeight.w500)),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(24),
-                    gradient: const LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: <Color>[
-                          Colors.pink,
-                          Colors.deepOrangeAccent
-                        ])))));
+        child: ElevatedButton(
+            onPressed: () => _answer(context, true),
+            style: ElevatedButton.styleFrom(
+                primary: AppColors.buttonRed, onPrimary: AppColors.textLight),
+            child: const Text('Faux',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ))));
   }
 
   void _answer(BuildContext context, bool userAnswer) {

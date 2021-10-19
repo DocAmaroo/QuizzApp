@@ -23,8 +23,8 @@ class QuizzBody extends StatelessWidget {
   Center _getImage(BuildContext context) {
     return Center(
       child: Container(
-          width: MediaQuery.of(context).size.width / 1.2,
-          height: MediaQuery.of(context).size.height / 2,
+          width: MediaQuery.of(context).size.width / 1.3,
+          height: MediaQuery.of(context).size.height / 2.3,
           decoration: BoxDecoration(
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.circular(16),

@@ -17,8 +17,8 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: <Color>[
-            Colors.purple.shade400,
-            Colors.pink.shade400
+            Theme.of(context).primaryColor,
+            Theme.of(context).secondaryHeaderColor
           ]))),
       actions: actions ?? [],
     );

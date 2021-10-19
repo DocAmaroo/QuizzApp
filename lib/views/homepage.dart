@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quizz/utils/theme.dart';
+import 'package:quizz/utils/theme/app_theme.dart';
 import 'package:quizz/bloc/quizz_bloc.dart';
 import 'package:quizz/data/models/question.dart';
 import 'package:quizz/services/quizz_services.dart';
@@ -15,7 +15,7 @@ import '../widgets/custom_app_bar.dart';
 
 class MyHomePage extends StatefulWidget {
   final String title;
-  final ThemeModel? theme;
+  final AppTheme? theme;
 
   const MyHomePage({Key? key, required this.title, this.theme})
       : super(key: key);
@@ -30,7 +30,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: MyAppBar(title: widget.title, actions: <Widget>[
+        appBar: AppBar(title: Text(widget.title), actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.add),
             tooltip: 'Add new question',
@@ -92,7 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
             if (state.currIndex < questions.length) {
               QuestionModel currQuestion = questions[state.currIndex];
 
-              return Wrap(runSpacing: 20, children: [
+              return Wrap(runSpacing: 30, children: [
                 QuizzHeader(
                     nbQuestion: questions.length, currIndex: state.currIndex),
                 QuizzBody(questionModel: currQuestion),
@@ -103,8 +103,9 @@ class _MyHomePageState extends State<MyHomePage> {
             }
           }
 
-          return const Center(
-              child: CircularProgressIndicator(color: Colors.black));
+          return Center(
+              child: CircularProgressIndicator(
+                  color: Theme.of(context).primaryColor));
         });
   }
 
