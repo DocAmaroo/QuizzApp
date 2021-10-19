@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quizz/utils/theme.dart';
 import 'package:quizz/bloc/quizz_bloc.dart';
 import 'package:quizz/data/models/question.dart';
 import 'package:quizz/services/quizz_services.dart';
@@ -13,9 +14,11 @@ import 'package:quizz/widgets/quizz_header.dart';
 import '../widgets/custom_app_bar.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
   final String title;
+  final ThemeModel? theme;
+
+  const MyHomePage({Key? key, required this.title, this.theme})
+      : super(key: key);
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -35,7 +38,8 @@ class _MyHomePageState extends State<MyHomePage> {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => const AddQuestion()));
             },
-          )
+          ),
+          if (widget.theme != null) _switchLightMode()
         ]),
         body: Center(
             child: SingleChildScrollView(
@@ -102,6 +106,16 @@ class _MyHomePageState extends State<MyHomePage> {
           return const Center(
               child: CircularProgressIndicator(color: Colors.black));
         });
+  }
+
+  IconButton _switchLightMode() {
+    return IconButton(
+      icon: Icon(widget.theme!.icon),
+      tooltip: 'Light/Dark mode',
+      onPressed: () {
+        widget.theme!.toggleMode();
+      },
+    );
   }
 
   // Custom SnackBar
