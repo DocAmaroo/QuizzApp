@@ -1,18 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class QuizzServices {
-  final FirebaseFirestore firebase = FirebaseFirestore.instance;
+  final _questionCollection =
+      FirebaseFirestore.instance.collection('questions');
 
   QuizzServices();
 
-  Future<QuerySnapshot> getQuestions() async {
-    return await firebase.collection('questions').get();
-  }
+  get questionCollection => _questionCollection;
 
   Future<void> addQuestion(String question, String answer, String imageURL) {
     const defaultImage =
         'https://st.depositphotos.com/1654249/2526/i/600/depositphotos_25269357-stock-photo-3d-man-with-red-question.jpg';
-    final questionCollection = firebase.collection('questions');
+    final questionCollection = _questionCollection;
     return questionCollection
         .add({
           'question': question,

@@ -12,7 +12,7 @@ Future main() async {
   await Firebase.initializeApp();
 
   // Bloc observer for debugging purpose
-  Bloc.observer = SimpleBlocObserver();
+  // Bloc.observer = SimpleBlocObserver();
 
   runApp(const MyApp());
 }
