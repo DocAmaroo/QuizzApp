@@ -5,6 +5,8 @@ abstract class QuizzState {}
 
 class QuizzInitial extends QuizzState {}
 
+class WaitingQuizzThemeState extends QuizzState {}
+
 class LoadingQuizzState extends QuizzState {}
 
 // Quizz information have been loaded

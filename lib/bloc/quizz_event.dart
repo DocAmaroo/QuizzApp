@@ -2,7 +2,13 @@ part of 'quizz_bloc.dart';
 
 abstract class QuizzEvent {}
 
+class WaitingQuizzThemeEvent extends QuizzEvent {}
+
 class LoadQuizz extends QuizzEvent {
+  final String theme;
+
+  LoadQuizz({required this.theme});
+
   @override
   String toString() => '[EVENT] Load quizz data';
 }

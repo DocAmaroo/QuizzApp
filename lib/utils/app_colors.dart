@@ -7,9 +7,14 @@ class AppColors {
   static get primaryColor => Colors.indigoAccent;
   static get secondaryColor => Colors.deepPurple;
 
+  // --- Success/Error colors
+  static get success => Colors.green.shade400;
+  static get error => Colors.red.shade400;
+
   // --- Text colors
   static get textLight => white;
-  static get textGrey => Colors.grey.shade300;
+  static get textLightGrey => Colors.grey.shade300;
+  static get textGrey => Colors.grey.shade500;
   static get textBlack => black;
 
   // --- Scaffold colors

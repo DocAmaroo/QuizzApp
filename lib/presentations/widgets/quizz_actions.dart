@@ -37,7 +37,7 @@ class QuizzActions extends StatelessWidget {
   Expanded _getFalseButton(BuildContext context) {
     return Expanded(
         child: ElevatedButton(
-            onPressed: () => _answer(context, true),
+            onPressed: () => _answer(context, false),
             style: ElevatedButton.styleFrom(
                 primary: AppColors.buttonRed, onPrimary: AppColors.textLight),
             child: const Text('Faux',

@@ -14,6 +14,7 @@ class AppLightTheme {
         hintStyle: TextStyle(color: AppColors.textGrey),
         labelStyle: TextStyle(color: AppColors.textBlack),
       ),
+      errorColor: AppColors.error,
       brightness: Brightness.light,
       iconTheme: ligthIconTheme,
       scaffoldBackgroundColor: AppColors.scaffoldBackgroundLight);
