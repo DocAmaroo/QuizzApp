@@ -32,28 +32,27 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text('Bienvenue !',
+              Text('Bienvenue !',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold)),
+                  style: Theme.of(context).textTheme.headline1),
               Wrap(
                   runSpacing: 20,
                   alignment: WrapAlignment.center,
-                  children: const <Widget>[
+                  children: <Widget>[
                     Text('Prêt à tester ta culture G ?',
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.w700)),
+                        style: Theme.of(context).textTheme.headline4),
                     Text('Alors choisis un thème et \n lance toi !',
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w400)),
+                        style: Theme.of(context).textTheme.headline5),
                   ]),
               StreamBuilder<QuerySnapshot>(
                 stream: _quizzServices.questionSnapshots,
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasError) {
-                    return const Text('Unable de fetch data!');
+                    return Text('Unable de fetch data!',
+                        style: Theme.of(context).textTheme.headline2);
                   }
 
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -63,7 +62,8 @@ class _HomePageState extends State<HomePage> {
                   }
                   if (!snapshot.hasData &&
                       snapshot.connectionState == ConnectionState.done) {
-                    return const Text('No theme!');
+                    return Text('No theme!',
+                        style: Theme.of(context).textTheme.headline2);
                   } else {
                     List allThemes = snapshot.data!.docs
                         .map((data) => data['theme'])
@@ -107,7 +107,8 @@ class _HomePageState extends State<HomePage> {
                       Navigator.pushNamed(context, '/quizz');
                     }
                   },
-                  child: const Text("Lancer"),
+                  child:
+                      Text("Lancer", style: Theme.of(context).textTheme.button),
                   style: ElevatedButton.styleFrom(
                       primary: Theme.of(context).primaryColor,
                       onPrimary: AppColors.textLight))

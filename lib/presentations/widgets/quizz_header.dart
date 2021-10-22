@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/src/provider.dart';
 import 'package:quizz/bloc/quizz_bloc.dart';
@@ -18,16 +19,13 @@ class QuizzHeader extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 32),
       child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: <Widget>[
         Text('${currIndex + 1}/$nbQuestion',
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
+            style: Theme.of(context).textTheme.headline4),
         const SizedBox(width: 12),
-        const Text('Question',
-            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400)),
+        Text('Question', style: Theme.of(context).textTheme.headline6),
         const Spacer(),
-        Text('$currPoints',
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
+        Text('$currPoints', style: Theme.of(context).textTheme.headline4),
         const SizedBox(width: 12),
-        const Text('Points',
-            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400)),
+        Text('Points', style: Theme.of(context).textTheme.headline6),
       ]),
     );
   }

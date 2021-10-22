@@ -27,11 +27,7 @@ class QuizzActions extends StatelessWidget {
             onPressed: () => _answer(context, true),
             style: ElevatedButton.styleFrom(
                 primary: AppColors.buttonGreen, onPrimary: AppColors.textLight),
-            child: const Text('Vrai',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ))));
+            child: Text('Vrai', style: Theme.of(context).textTheme.button)));
   }
 
   Expanded _getFalseButton(BuildContext context) {
@@ -40,11 +36,7 @@ class QuizzActions extends StatelessWidget {
             onPressed: () => _answer(context, false),
             style: ElevatedButton.styleFrom(
                 primary: AppColors.buttonRed, onPrimary: AppColors.textLight),
-            child: const Text('Faux',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ))));
+            child: Text('Faux', style: Theme.of(context).textTheme.button)));
   }
 
   void _answer(BuildContext context, bool userAnswer) {

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:quizz/data/models/question.dart';
 
@@ -9,15 +10,16 @@ class QuizzBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Wrap(
-        runSpacing: 20, children: <Widget>[_getQuestion(), _getImage(context)]);
+        runSpacing: 20,
+        children: <Widget>[_getQuestion(context), _getImage(context)]);
   }
 
-  Container _getQuestion() {
+  Container _getQuestion(BuildContext context) {
     return Container(
         padding: const EdgeInsets.symmetric(horizontal: 32),
         child: Text(questionModel.getQuestion,
             textAlign: TextAlign.center,
-            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18)));
+            style: Theme.of(context).textTheme.headline5));
   }
 
   Center _getImage(BuildContext context) {

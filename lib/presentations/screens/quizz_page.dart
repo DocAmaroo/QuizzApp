@@ -53,11 +53,9 @@ class _QuizzPageState extends State<QuizzPage> {
                         nbPoints: state.nbPoints,
                       );
                     } else {
-                      return const Center(
+                      return Center(
                         child: Text('No statement, try to reload the app',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontStyle: FontStyle.italic)),
+                            style: Theme.of(context).textTheme.headline2),
                       );
                     }
                   })
@@ -89,7 +87,8 @@ class _QuizzPageState extends State<QuizzPage> {
         stream: _quizzServices.questionSnapshotsByTheme(_quizzTheme),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
-            return const Text('Unable to fetch data!');
+            return Text('Unable to fetch data!',
+                style: Theme.of(context).textTheme.headline2);
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -98,7 +97,8 @@ class _QuizzPageState extends State<QuizzPage> {
                     color: Theme.of(context).primaryColor));
           } else if (snapshot.connectionState == ConnectionState.done &&
               !snapshot.hasData) {
-            return const Text('No question available!');
+            return Text('No question available!',
+                style: Theme.of(context).textTheme.headline2);
           } else {
             // Transform into list of question model
             var data = snapshot.data!.docs;
