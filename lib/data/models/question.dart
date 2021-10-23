@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class QuestionModel {
-  String? id;
+  String id;
   String question;
   bool answer;
   String imageURL;
 
   QuestionModel(
-      {this.id,
+      {required this.id,
       required this.question,
       required this.answer,
       required this.imageURL});

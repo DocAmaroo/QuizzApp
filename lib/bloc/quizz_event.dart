@@ -5,9 +5,9 @@ abstract class QuizzEvent {}
 class WaitingQuizzThemeEvent extends QuizzEvent {}
 
 class LoadQuizz extends QuizzEvent {
-  final String theme;
+  final String themeId;
 
-  LoadQuizz({required this.theme});
+  LoadQuizz({required this.themeId});
 
   @override
   String toString() => '[EVENT] Load quizz data';

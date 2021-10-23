@@ -7,13 +7,13 @@ part 'quizz_event.dart';
 part 'quizz_state.dart';
 
 class QuizzBloc extends Bloc<QuizzEvent, QuizzState> {
-  String currTheme = '';
+  String currThemeId = '';
   int nbPoints = 0;
   int correct = 0;
   int incorrect = 0;
   int currIndex = 0;
 
-  String get getTheme => currTheme;
+  String get getThemeId => currThemeId;
   int get getNbPoints => nbPoints;
   int get getNbCorrect => correct;
   int get getNbIncorrect => incorrect;
@@ -27,7 +27,7 @@ class QuizzBloc extends Bloc<QuizzEvent, QuizzState> {
 
   void _loadQuizz(LoadQuizz event, Emitter<QuizzState> emit) async {
     emit(LoadingQuizzState());
-    currTheme = event.theme;
+    currThemeId = event.themeId;
     currIndex = 0;
     nbPoints = 0;
     correct = 0;
@@ -58,6 +58,6 @@ class QuizzBloc extends Bloc<QuizzEvent, QuizzState> {
   }
 
   void _onRestart(QuizzRestart event, Emitter<QuizzState> emit) {
-    add(LoadQuizz(theme: currTheme));
+    add(LoadQuizz(themeId: currThemeId));
   }
 }

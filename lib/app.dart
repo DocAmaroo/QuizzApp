@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:quizz/bloc/quizz_bloc.dart';
 import 'package:quizz/presentations/screens/add_question_page.dart';
+import 'package:quizz/presentations/screens/add_theme_page.dart';
 import 'package:quizz/presentations/screens/home_page.dart';
 import 'package:quizz/presentations/screens/quizz_page.dart';
 import 'package:quizz/presentations/screens/result_page.dart';
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
               routes: {
                 '/': (context) => HomePage(title: 'Menu', theme: theme),
                 '/quizz': (context) => QuizzPage(theme: theme),
+                '/addTheme': (context) => const AddTheme(),
                 '/addQuestion': (context) => const AddQuestion()
               },
             ),

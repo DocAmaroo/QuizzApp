@@ -26,11 +26,11 @@ class _QuizzPageState extends State<QuizzPage> {
 
   @override
   Widget build(BuildContext context) {
-    _quizzTheme = BlocProvider.of<QuizzBloc>(context).currTheme;
+    _quizzTheme = BlocProvider.of<QuizzBloc>(context).currThemeId;
 
     return Scaffold(
         appBar: AppBar(
-            title: Text(Utils.capitalize(_quizzTheme)),
+            title: Text(Utils.capitalize('Quizz')),
             actions: _getAppBarActions()),
         body: Center(
             child: SingleChildScrollView(
@@ -84,7 +84,7 @@ class _QuizzPageState extends State<QuizzPage> {
   // Load the content to display with firebase
   StreamBuilder _loadQuizz(BuildContext context, LoadedQuizzState state) {
     return StreamBuilder<QuerySnapshot>(
-        stream: _quizzServices.questionSnapshotsByTheme(_quizzTheme),
+        stream: _quizzServices.getQuestionsSnapshotByThemeId(_quizzTheme),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
             return Text('Unable to fetch data!',
@@ -105,6 +105,11 @@ class _QuizzPageState extends State<QuizzPage> {
             List<QuestionModel> questions = data
                 .map((e) => QuestionModel.fromQueryDocumentSnapshot(e))
                 .toList();
+
+            if (questions.isEmpty) {
+              return Text('Votre thème n\'a pas de question',
+                  style: Theme.of(context).textTheme.headline5);
+            }
 
             // Check if the game end
             if (state.currIndex < questions.length) {

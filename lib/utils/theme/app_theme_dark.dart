@@ -30,7 +30,7 @@ class AppDarkTheme {
           headline4: TextStyle(
               color: AppColors.textLightGrey,
               fontSize: 24,
-              fontWeight: FontWeight.w300),
+              fontWeight: FontWeight.w400),
           headline5: TextStyle(
               color: AppColors.textLightGrey,
               fontSize: 20,
@@ -39,10 +39,7 @@ class AppDarkTheme {
               color: AppColors.textLightGrey,
               fontSize: 16,
               fontWeight: FontWeight.w300),
-          subtitle1: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w200,
-              fontStyle: FontStyle.italic),
+          subtitle1: const TextStyle(fontSize: 14, fontWeight: FontWeight.w300),
           subtitle2: const TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w100,

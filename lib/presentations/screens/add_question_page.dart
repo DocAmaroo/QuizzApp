@@ -17,16 +17,14 @@ class _AddQuestionState extends State<AddQuestion> {
   final _questionController = TextEditingController();
   final _answerController = TextEditingController();
   final _imageURLController = TextEditingController();
-  final _themeController = TextEditingController();
 
   String get questionText => _questionController.text;
   String get answerText => _answerController.text;
   String get imageURLText => _imageURLController.text;
-  String get themeText => _themeController.text;
 
   @override
   Widget build(BuildContext context) {
-    String currTheme = BlocProvider.of<QuizzBloc>(context).currTheme;
+    String currTheme = BlocProvider.of<QuizzBloc>(context).currThemeId;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Ajouter une question')),
@@ -34,36 +32,27 @@ class _AddQuestionState extends State<AddQuestion> {
         padding: const EdgeInsets.all(16.0),
         child: Wrap(runSpacing: 12, children: <Widget>[
           TextField(
-              style: const TextStyle(fontWeight: FontWeight.w400),
+              style: Theme.of(context).textTheme.headline6,
               controller: _questionController,
               decoration: const InputDecoration(
-                  labelText: 'Question', hintText: 'Your wonderful question')),
+                  labelText: 'Question', hintText: 'Votre question')),
           TextField(
-              style: const TextStyle(fontWeight: FontWeight.w400),
+              style: Theme.of(context).textTheme.headline6,
               controller: _answerController,
               decoration: const InputDecoration(
-                  labelText: 'Answer', hintText: 'true/false')),
+                  labelText: 'Réponse', hintText: 'true/false')),
           TextField(
-              style: const TextStyle(fontWeight: FontWeight.w400),
+              style: Theme.of(context).textTheme.headline6,
               controller: _imageURLController,
               decoration: const InputDecoration(
-                  labelText: 'Image URL (Optionnal)',
+                  labelText: 'Image URL (Optionnelle)',
                   hintText: 'https://myimage.org')),
-          TextField(
-              style: const TextStyle(fontWeight: FontWeight.w400),
-              controller: _themeController,
-              decoration: InputDecoration(
-                  labelText: 'Theme (Optionnal)',
-                  hintText: 'default: $currTheme')),
           Center(
               child: ElevatedButton(
-                  child: const Text('Add'),
+                  child: const Text('Ajouter'),
                   onPressed: () {
                     _quizzServices.addQuestion(
-                        questionText,
-                        answerText,
-                        imageURLText,
-                        themeText.isEmpty ? currTheme : themeText);
+                        questionText, answerText, imageURLText, currTheme);
                     Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(

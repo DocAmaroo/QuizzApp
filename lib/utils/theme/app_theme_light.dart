@@ -20,13 +20,10 @@ class AppLightTheme {
           headline1: const TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
           headline2: const TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
           headline3: const TextStyle(fontSize: 28, fontWeight: FontWeight.w500),
-          headline4: const TextStyle(fontSize: 24, fontWeight: FontWeight.w300),
+          headline4: const TextStyle(fontSize: 24, fontWeight: FontWeight.w400),
           headline5: const TextStyle(fontSize: 20, fontWeight: FontWeight.w300),
           headline6: const TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
-          subtitle1: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w200,
-              fontStyle: FontStyle.italic),
+          subtitle1: const TextStyle(fontSize: 14, fontWeight: FontWeight.w300),
           subtitle2: const TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w100,
@@ -43,6 +40,9 @@ class AppLightTheme {
 
   AppBarTheme _lightAppBarTheme() {
     return AppBarTheme(
+        iconTheme: IconThemeData(
+          color: AppColors.white, //change your color here
+        ),
         systemOverlayStyle: SystemUiOverlayStyle.light,
         backgroundColor: AppColors.primaryColor,
         actionsIconTheme: ligthIconTheme,

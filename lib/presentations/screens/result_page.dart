@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/src/provider.dart';
 import 'package:quizz/bloc/quizz_bloc.dart';
+import 'package:quizz/utils/app_colors.dart';
 
 class ResultPage extends StatelessWidget {
   final int nbAnswer;
@@ -31,23 +32,17 @@ class ResultPage extends StatelessWidget {
           Text('$nbCorrectAnswer correcte | $nbIncorrectAnswer incorrecte',
               style: const TextStyle(fontSize: 16)),
           const SizedBox(height: 32),
-          // Restart button
-          GestureDetector(
-              onTap: () {
-                context.read<QuizzBloc>().add(QuizzRestart());
-              },
+          ElevatedButton(
+              onPressed: () => context.read<QuizzBloc>().add(QuizzRestart()),
+              style: ElevatedButton.styleFrom(
+                  primary: Theme.of(context).primaryColor,
+                  onPrimary: AppColors.textLight),
               child: Container(
                   padding:
                       const EdgeInsets.symmetric(vertical: 16, horizontal: 64),
-                  child: const Text("Replay Quizz",
-                      style: TextStyle(color: Colors.white, fontSize: 16)),
-                  decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(16),
-                      gradient: const LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: <Color>[Colors.deepPurple, Colors.indigo])))),
+                  child: Text("Replay Quizz",
+                      style: Theme.of(context).textTheme.button)))
+          // Restart button
         ]));
   }
 }

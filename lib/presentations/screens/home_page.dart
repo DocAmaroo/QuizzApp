@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quizz/bloc/quizz_bloc.dart';
+import 'package:quizz/data/models/theme.dart';
 import 'package:quizz/data/services/quizz_services.dart';
 import 'package:quizz/utils/app_colors.dart';
 import 'package:quizz/utils/theme/app_theme.dart';
@@ -21,9 +22,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final _quizzServices = QuizzServices();
   String? _dropdownThemeValue;
+  int? _dropDownThemeIndex;
 
   @override
   Widget build(BuildContext context) {
+    late List<ThemeModel> allThemes;
+
     return Scaffold(
       appBar: AppBar(title: Text(widget.title), actions: _getAppBarActions()),
       body: SafeArea(
@@ -47,7 +51,7 @@ class _HomePageState extends State<HomePage> {
                         style: Theme.of(context).textTheme.headline5),
                   ]),
               StreamBuilder<QuerySnapshot>(
-                stream: _quizzServices.questionSnapshots,
+                stream: _quizzServices.quizzCollection.snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasError) {
@@ -65,8 +69,12 @@ class _HomePageState extends State<HomePage> {
                     return Text('No theme!',
                         style: Theme.of(context).textTheme.headline2);
                   } else {
-                    List allThemes = snapshot.data!.docs
-                        .map((data) => data['theme'])
+                    allThemes = snapshot.data!.docs
+                        .map((e) => ThemeModel.fromQueryDocumentSnapshot(e))
+                        .toList();
+
+                    final themes = allThemes
+                        .map((theme) => theme.theme)
                         .map((e) => (Utils.capitalize(e)))
                         .toSet()
                         .toList();
@@ -76,17 +84,22 @@ class _HomePageState extends State<HomePage> {
                           height: 1,
                           color: Theme.of(context).primaryColor,
                         ),
-                        hint: const Text('Sélectionnez un thème'),
+                        hint: Text(
+                          'Sélectionnez un thème',
+                          style: Theme.of(context).textTheme.headline5,
+                        ),
                         value: _dropdownThemeValue,
-                        items: allThemes.map((value) {
+                        items: themes.map((value) {
                           return DropdownMenuItem<String>(
                             value: value,
-                            child: Text(value),
+                            child: Text(value,
+                                style: Theme.of(context).textTheme.headline5),
                           );
                         }).toList(),
                         onChanged: (String? value) {
                           setState(() {
                             _dropdownThemeValue = value!;
+                            _dropDownThemeIndex = themes.indexOf(value);
                           });
                         });
                   }
@@ -102,8 +115,9 @@ class _HomePageState extends State<HomePage> {
                           duration: const Duration(seconds: 2),
                           content: const Text('Aucun thème sélectionné.')));
                     } else {
-                      BlocProvider.of<QuizzBloc>(context).add(
-                          LoadQuizz(theme: _dropdownThemeValue!.toLowerCase()));
+                      String themeId = allThemes[_dropDownThemeIndex!].id;
+                      BlocProvider.of<QuizzBloc>(context)
+                          .add(LoadQuizz(themeId: themeId));
                       Navigator.pushNamed(context, '/quizz');
                     }
                   },
@@ -121,6 +135,13 @@ class _HomePageState extends State<HomePage> {
 
   List<Widget> _getAppBarActions() {
     return [
+      IconButton(
+        icon: const Icon(Icons.add),
+        tooltip: 'Add new theùe',
+        onPressed: () {
+          Navigator.pushNamed(context, '/addTheme');
+        },
+      ),
       if (widget.theme != null)
         IconButton(
             icon: Icon(widget.theme!.icon),
